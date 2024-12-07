@@ -1,0 +1,26 @@
+﻿@using MPA.DTOs
+@model CreateNewsDTO
+
+<head>
+    <link href="~/css/Admin.css" rel="stylesheet" />
+</head>
+<h2>Create News</h2>
+
+<form asp-action="CreateNews" asp-controller="Admin" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="Title">Title</label>
+        <input asp-for="Title" id="Title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div>
+        <label for="Body">Body</label>
+        <textarea asp-for="Body" id="Body"></textarea>
+        <span asp-validation-for="Body" class="text-danger"></span>
+    </div>
+    <div>
+        <label for="Image">Image</label>
+        <input asp-for="Image" id="Image" type="file" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+    <button type="submit">Create News</button>
+</form>

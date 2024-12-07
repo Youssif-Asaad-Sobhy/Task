@@ -1,0 +1,15 @@
+﻿using Abp.Localization;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+
+namespace MPA.Web.Views.Shared.Components.LanguageSelection
+{
+    public class LanguageSelectionViewModel
+    {
+        public LanguageInfo CurrentLanguage { get; set; }
+
+        public IReadOnlyList<LanguageInfo> Languages { get; set; }
+
+        public PathString CurrentUrl { get; set; }
+    }
+}

@@ -1,0 +1,109 @@
+﻿@model MPA.DTOs.NewsListDTO
+
+<div class="news-container">
+    <header>
+        <h1>News</h1>
+        <div class="stay-informed">Stay Informed</div>
+    </header>
+
+    <div class="news-layout">
+        <!-- Left Column: News List -->
+        <div class="news-list">
+            @foreach (var news in Model.NewsItems)
+            {
+                <div class="news-item">
+                    <div class="news-header">
+                        <h2>@news.Title</h2>
+                        <span class="news-date">@news.CreationTime.ToString("MMMM dd, yyyy")</span>
+                        <button class="toggle-body">+</button>
+                    </div>
+                    <div class="news-body">
+                        <p class="text">
+                            @news.Body
+                        </p>
+                        <img src="@Url.Content(news.PhotoPath)" alt="News Image" />
+                    </div>
+                    @* <div class="news-body-long">
+                        <p>
+                            @news.Body
+                        </p>
+                        <img src="@Url.Content(news.PhotoPath)" alt="News Image" />
+                    </div> *@
+                </div>
+            }
+        </div>
+
+        <!-- Right Column: Welcome and Archive -->
+        <div class="news-sidebar">
+            <div class="welcome-box">
+                <h3>Welcome to Our News</h3>
+                <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, 
+                    per inceptos hymenaeos. Maecenas eget augue. Integer mi. Aliquam erat volutpat. 
+                    Maecenas eros. Mauris lectus leo, ullamcorper vitae, bibendum vitae, tincidunt et, velit. 
+                    Phasellus egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+                    Aenean vitae arcu ac velit semper vehicula. Sed interdum iaculis nisl. Fusce </p>
+            </div>
+            <div class="archive-box">
+                <h3>News Archive</h3>
+                <ul>
+                    @foreach (var archive in Model.ArchiveData)
+                    {
+                        <li>
+                            <a class="archive-link" href="@Url.Action("Index", new { year = archive.Year, month = archive.MonthNumber })">
+                                @archive.Month @archive.Year (@archive.NewsCount)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const params = new URLSearchParams(window.location.search);
+        const year = params.get("year");
+        const month = params.get("month");
+
+        $(".archive-link").each(function () {
+            const linkHref = new URL($(this).attr("href"), window.location.origin);
+            const linkYear = linkHref.searchParams.get("year");
+            const linkMonth = linkHref.searchParams.get("month");
+
+            if (linkYear === year && linkMonth === month) {
+                $(this).css("font-weight", "bold");
+            }
+        });
+        $("p").each(function () {
+            var originalText = $(this).text();
+            $(this).data("original-text", originalText);
+            $(this).text(originalText.length>150?originalText.substring(0,150)+"...":originalText);
+        });
+
+        $(".toggle-body").on("click", function () {
+            var nearestP = $(this).closest(".news-item").find("p").first();
+            var cur = $(this).text();
+            $(this).text(cur === "+" ? "-" : "+");
+
+            $(".toggle-body").not(this).text("+");
+
+            $("p").each(function () {
+                var org = $(this).data("original-text");
+                if(cur==="-")
+                {
+                    $(this).text(org.length > 150 ? org.substring(0, 150) + "..." : org);
+                } else if (!$(this).is(nearestP) && cur === "+") {
+                    $(this).text(org.length > 150 ? org.substring(0, 150) + "..." : org);
+                } else if ($(this).is(nearestP)) {
+                    $(this).text(org);
+                }
+            });
+
+        });
+    });
+</script>
+
+
+
